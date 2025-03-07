@@ -107,7 +107,8 @@ uint32_t arithmetic_r(mem::memory&, processor & proc, uint32_t bitstream);
 
 uint32_t jal(mem::memory&, processor & proc, uint32_t bitstream);
 
-uint32_t bge(mem::memory&, processor & proc, uint32_t bitstream);
+uint32_t branch(mem::memory&, processor & proc, uint32_t bitstream);
+
 
 uint32_t lui(mem::memory&, processor & proc, uint32_t bitstream);
 
@@ -128,8 +129,8 @@ void execute_store(mem::memory& mem, processor& proc,
     mem::address_t addr, uint8_t rs2);
 
 template<uint8_t funct3>
-void execute_branch(mem::memory& mem, processor& proc,
-    uint32_t bitstream, uint32_t imm);
+uint32_t execute_branch(processor& proc,
+    uint32_t rs1, uint32_t rs2, uint32_t imm);
 
 using instr_emulation = std::function<uint32_t(mem::memory& mem, processor& proc, uint32_t)>;
 

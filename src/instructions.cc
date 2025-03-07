@@ -189,17 +189,64 @@ uint32_t instrs::jal(memory&, processor & proc, uint32_t bitstream) {
   return target;
 }
 
-uint32_t instrs::bge(memory& , processor & proc, uint32_t bitstream) {
+// BEQ
+template<>
+uint32_t instrs::execute_branch<0b000>(processor& proc, uint32_t rs1, uint32_t rs2, uint32_t imm) {
+  if(rs1 == rs2) {
+    address_t target = proc.read_pc() + imm;
+    proc.write_pc(target);
+    return target;
+  }
+  return proc.next_pc();
+}
+
+// BNE
+template<>
+uint32_t instrs::execute_branch<0b001>(processor& proc, uint32_t rs1, uint32_t rs2, uint32_t imm) {
+  if(rs1 != rs2) {
+    address_t target = proc.read_pc() + imm;
+    proc.write_pc(target);
+    return target;
+  }
+  return proc.next_pc();
+}
+
+// BLT
+template<>
+uint32_t instrs::execute_branch<0b100>(processor& proc, uint32_t rs1, uint32_t rs2, uint32_t imm) {
+  if(static_cast<int32_t>(rs1) < static_cast<int32_t>(rs2)) {
+    address_t target = proc.read_pc() + imm;
+    proc.write_pc(target);
+    return target;
+  }
+  return proc.next_pc();
+}
+
+
+// BGE
+template<>
+uint32_t instrs::execute_branch<0b101>(processor& proc, uint32_t rs1, uint32_t rs2, uint32_t imm) {
+  if(rs1 >= rs2) {
+    address_t target = proc.read_pc() + imm;
+    proc.write_pc(target);
+    return target;
+  }
+  return proc.next_pc();
+}
+
+uint32_t instrs::branch(memory&, processor& proc, uint32_t bitstream){
+
   b_instruction bi{bitstream};
 
   uint32_t imm = bi.imm13();
   uint32_t rs1 = proc.read_reg(bi.rs1());
   uint32_t rs2 = proc.read_reg(bi.rs2());
 
-  if(rs1 >= rs2) {
-    address_t target = proc.read_pc() + imm;
-    proc.write_pc(target);
-    return target;
+  switch(bi.funct3()) {
+    case 0b000: return execute_branch<0b000>(proc, rs1, rs2, imm); // BEQ
+    case 0b001: return execute_branch<0b001>(proc, rs1, rs2, imm); // BNE
+    case 0b100: return execute_branch<0b100>(proc, rs1, rs2, imm); // BLT
+    case 0b101: return execute_branch<0b101>(proc, rs1, rs2, imm); // BGE
   }
   return proc.next_pc();
 }

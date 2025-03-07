@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     {0b0010011, instrs::arithmetic_i},
     {0b0110011, instrs::arithmetic_r},
     {0b1101111, instrs::jal},
-    {0b1100011, instrs::bge},
+    {0b1100011, instrs::branch},
     {0b0110111, instrs::lui},
     
     //INtrucciones
