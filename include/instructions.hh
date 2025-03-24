@@ -16,7 +16,7 @@ template<typename T, unsigned B>
 inline T sign_extend(const T x) {
     struct { T x:B; } s;
     return s.x = x;
-}  
+}
 
 class instruction {
     protected:
@@ -94,7 +94,9 @@ class j_instruction : public instruction {
         j_instruction(uint32_t bitstream) :
             instruction(bitstream, type::j) {}
         constexpr uint8_t rd() const { return bits(7, 5); }
+        constexpr uint8_t rs1() const { return bits(15, 5); }
         constexpr uint32_t imm() const { return (bits(21, 10) << 1) | (bits(20, 1) << 11) | (bits(12, 8) << 12) | (bits(31, 1) << 20); }
+        uint32_t imm21() const { return static_cast<uint32_t>(sign_extend<int32_t, 21>(imm()));}
 };
 
 uint32_t load(mem::memory& mem, processor& proc, uint32_t bitstream);
@@ -109,6 +111,7 @@ uint32_t jal(mem::memory&, processor & proc, uint32_t bitstream);
 
 uint32_t branch(mem::memory&, processor & proc, uint32_t bitstream);
 
+uint32_t jalr(mem::memory&, processor & proc, uint32_t bitstream);
 
 uint32_t lui(mem::memory&, processor & proc, uint32_t bitstream);
 

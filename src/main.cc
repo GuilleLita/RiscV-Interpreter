@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 
    memory mem;
    processor proc;
-   
+
 
    mem.load_binary(argv[1]);
 
@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
     {0b1101111, instrs::jal},
     {0b1100011, instrs::branch},
     {0b0110111, instrs::lui},
-    
+    {0b1100111, instrs::jalr},
     //INtrucciones
    };
 
@@ -62,6 +62,11 @@ int main(int argc, char *argv[])
    } while (next_pc != pc); // look for while(1) in the code
 
    std::cout << "Number of executed instructions: " << exec_instrs << std::endl;
+
+   // Mostrar el resultado de la función factorial (registro a0)
+   uint32_t a0_result = proc.read_reg(10); // Leer el registro a0 (registro 10)
+   std::cout << "Result in a0 (factorial): " << std::dec << a0_result << std::endl;
+   
     // Mostrar el resultado de la suma del arreglo (pila s0 - 20)
    uint32_t s0 = proc.read_reg(8); // Leer el registro s0 (registro 8)
    address_t result_addr = s0 - 20; // Dirección de la variable local que almacena el resultado

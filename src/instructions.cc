@@ -108,7 +108,7 @@ uint32_t instrs::store(memory& mem, processor & proc, uint32_t bitstream) {
 
   uint32_t imm = si.imm12();
   uint32_t rs1 = proc.read_reg(si.rs1());
-  
+
   // compute dst address
   address_t src = rs1 + imm;
 
@@ -122,6 +122,7 @@ uint32_t instrs::store(memory& mem, processor & proc, uint32_t bitstream) {
   return proc.next_pc();
 }
 
+// ADDI
 template<>
 void instrs::execute_arithmetic_i<0b000>( processor& proc, uint8_t rs1, uint8_t rd, uint32_t imm) {
   proc.write_reg(rd, proc.read_reg(rs1) + imm);
@@ -134,7 +135,7 @@ void instrs::execute_arithmetic_i<0b001>( processor& proc, uint8_t rs1, uint8_t 
 
 
 uint32_t instrs::arithmetic_i(memory& , processor & proc, uint32_t bitstream) {
-  
+
   i_instruction ii{bitstream};
 
   uint32_t imm = ii.imm12();
@@ -147,22 +148,26 @@ uint32_t instrs::arithmetic_i(memory& , processor & proc, uint32_t bitstream) {
   return proc.next_pc();
 }
 
+// ADD, SUB y MUL
 template<>
 void instrs::execute_arithmetic_r<0b000>( processor& proc, uint8_t rs1, uint8_t rs2, uint8_t rd, uint32_t funct7) {
   if(funct7 == 0) {
     proc.write_reg(rd, proc.read_reg(rs1) + proc.read_reg(rs2));
-  } else {
+  } else if(funct7 == 0b0100000){
     proc.write_reg(rd, proc.read_reg(rs1) - proc.read_reg(rs2));
+  }else if(funct7 == 1){
+    proc.write_reg(rd, proc.read_reg(rs1) * proc.read_reg(rs2));
   }
 }
 
+// SLL
 template<>
 void instrs::execute_arithmetic_r<0b001>( processor& proc, uint8_t rs1, uint8_t rs2, uint8_t rd, uint32_t) {
   proc.write_reg(rd, proc.read_reg(rs1) << proc.read_reg(rs2));
 }
 
 uint32_t instrs::arithmetic_r(memory& , processor & proc, uint32_t bitstream) {
-  
+
   r_instruction ri{bitstream};
 
   // ToDo refactor with templates
@@ -174,16 +179,33 @@ uint32_t instrs::arithmetic_r(memory& , processor & proc, uint32_t bitstream) {
   return proc.next_pc();
 }
 
+// JAL
 uint32_t instrs::jal(memory&, processor & proc, uint32_t bitstream) {
 
   j_instruction ji{bitstream};
 
   // save the return address
   if(ji.rd() != 0) {
-    proc.write_reg(ji.rd(), proc.read_pc());
-  }
+    proc.write_reg(ji.rd(), proc.read_pc() + 4 );
+  } //TODO: next or current?
 
-  address_t target = proc.read_pc() + sign_extend<uint32_t, 21>(ji.imm());
+  address_t target = proc.read_pc() + ji.imm21();
+  // jump to the new address
+  proc.write_pc(target);
+  return target;
+}
+
+// JALR (RET)
+uint32_t instrs::jalr(memory&, processor & proc, uint32_t bitstream) {
+
+  i_instruction ii{bitstream};
+
+  // save the return address
+  if(ii.rd() != 0) {
+    proc.write_reg(ii.rd(), proc.read_pc() + 4);
+  } //TODO: next or current?
+
+  address_t target = proc.read_reg(ii.rs1()) + ii.imm12();
   // jump to the new address
   proc.write_pc(target);
   return target;
@@ -200,7 +222,7 @@ uint32_t instrs::execute_branch<0b000>(processor& proc, uint32_t rs1, uint32_t r
   return proc.next_pc();
 }
 
-// BNE
+// BNE(BNEZ)
 template<>
 uint32_t instrs::execute_branch<0b001>(processor& proc, uint32_t rs1, uint32_t rs2, uint32_t imm) {
   if(rs1 != rs2) {
