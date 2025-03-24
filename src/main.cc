@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
     {0b1100011, instrs::branch},
     {0b0110111, instrs::lui},
     {0b1100111, instrs::jalr},
-    //INtrucciones
+    //Instrucciones
    };
 
    // read the entry point
@@ -43,7 +43,6 @@ int main(int argc, char *argv[])
    // the stack grows downward with the stack pointer always being 16-byte aligned
    proc.write_reg(processor::sp, memory::stack_top);
 
-   //address_t pc = 0xDEADBEEF, next_pc = 0xDEADBEEF;
     address_t pc = mem.entry_point(), next_pc{0x0}  ;
 
    size_t exec_instrs = 0;
@@ -63,13 +62,13 @@ int main(int argc, char *argv[])
 
    std::cout << "Number of executed instructions: " << exec_instrs << std::endl;
 
-   // Mostrar el resultado de la función factorial (registro a0)
-   uint32_t a0_result = proc.read_reg(10); // Leer el registro a0 (registro 10)
-   std::cout << "Result in a0 (factorial): " << std::dec << a0_result << std::endl;
+   // 
+   uint32_t a0_result = proc.read_reg(10); // Leer el registro a0 
+   std::cout << "Resultado de factorial de 5(120): " << std::dec << a0_result << std::endl;
    
-    // Mostrar el resultado de la suma del arreglo (pila s0 - 20)
-   uint32_t s0 = proc.read_reg(8); // Leer el registro s0 (registro 8)
+    // Mostrar el resultado de la suma del array (pila s0 - 20)
+   uint32_t s0 = proc.read_reg(8); // Leer el registro s0
    address_t result_addr = s0 - 20; // Dirección de la variable local que almacena el resultado
-   uint32_t stack_result = mem.read<uint32_t>(result_addr); // Leer el valor de la pila
-   std::cout << "Result on stack (add_array): " << std::dec << stack_result << std::endl;
+   uint32_t stack_result = mem.read<uint32_t>(result_addr); // Leer el resultado de la pila
+   std::cout << "Resultado de add_array(6): " << std::dec << stack_result << std::endl;
 }

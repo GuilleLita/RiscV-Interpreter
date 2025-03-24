@@ -5,7 +5,6 @@ using namespace instrs;
 using namespace mem;
 
 
-// ToDo use the type instead of RISC-V funct3 field?
 // assume little endian
 // LW 0b010
 template<>
@@ -66,7 +65,7 @@ uint32_t instrs::load(memory& mem, processor & proc, uint32_t bitstream) {
   // compute src address
   address_t src = proc.read_reg(ii.rs1()) + ii.imm12();
 
-  // ToDo refactor with templates
+ 
   switch(ii.funct3()) {
     case 0b010: execute_load<0b010>(mem, proc, src, ii.rd()); break;
     case 0b000: execute_load<0b000>(mem, proc, src, ii.rd()); break;
@@ -112,7 +111,7 @@ uint32_t instrs::store(memory& mem, processor & proc, uint32_t bitstream) {
   // compute dst address
   address_t src = rs1 + imm;
 
-  // ToDo refactor with templates
+  
   switch(si.funct3()) {
     case 0b000: execute_store<0b000>(mem, proc, src, si.rs2()); break; // SB
     case 0b001: execute_store<0b001>(mem, proc, src, si.rs2()); break; // SH
@@ -139,7 +138,7 @@ uint32_t instrs::arithmetic_i(memory& , processor & proc, uint32_t bitstream) {
   i_instruction ii{bitstream};
 
   uint32_t imm = ii.imm12();
-  // ToDo refactor with templates
+  
   switch(ii.funct3()) {
     case 0b000: execute_arithmetic_i<0b000>(proc, ii.rs1(), ii.rd(), imm); break;
     case 0b001: execute_arithmetic_i<0b001>(proc, ii.rs1(), ii.rd(), imm); break;
@@ -170,7 +169,7 @@ uint32_t instrs::arithmetic_r(memory& , processor & proc, uint32_t bitstream) {
 
   r_instruction ri{bitstream};
 
-  // ToDo refactor with templates
+  
   switch(ri.funct3()) {
     case 0b000: execute_arithmetic_r<0b000>(proc, ri.rs1(), ri.rs2(), ri.rd(), ri.funct7()); break;
     case 0b001: execute_arithmetic_r<0b001>(proc, ri.rs1(), ri.rs2(), ri.rd(), ri.funct7()); break;
@@ -187,7 +186,7 @@ uint32_t instrs::jal(memory&, processor & proc, uint32_t bitstream) {
   // save the return address
   if(ji.rd() != 0) {
     proc.write_reg(ji.rd(), proc.read_pc() + 4 );
-  } //TODO: next or current?
+  } 
 
   address_t target = proc.read_pc() + ji.imm21();
   // jump to the new address
@@ -203,7 +202,7 @@ uint32_t instrs::jalr(memory&, processor & proc, uint32_t bitstream) {
   // save the return address
   if(ii.rd() != 0) {
     proc.write_reg(ii.rd(), proc.read_pc() + 4);
-  } //TODO: next or current?
+  }
 
   address_t target = proc.read_reg(ii.rs1()) + ii.imm12();
   // jump to the new address
