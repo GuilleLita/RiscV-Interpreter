@@ -19,6 +19,8 @@ int main(int argc, char *argv[])
    memory mem;
    processor proc;
 
+   std::cout << "Loading program: " << argv[1] << std::endl;
+
 
    mem.load_binary(argv[1]);
 
@@ -62,13 +64,20 @@ int main(int argc, char *argv[])
 
    std::cout << "Number of executed instructions: " << exec_instrs << std::endl;
 
-   // 
-   uint32_t a0_result = proc.read_reg(10); // Leer el registro a0 
-   std::cout << "Resultado de factorial de 5(120): " << std::dec << a0_result << std::endl;
+
+    
+   if(std::string(argv[1]) == "../examples/factorial"){
+        uint32_t a0_result = proc.read_reg(10); // Leer el registro a0 
+        std::cout << "Resultado de factorial de 5(120): " << std::dec << a0_result << std::endl;
+       
+   }else if(std::string(argv[1]) == "../examples/add_array"){
+        // Mostrar el resultado de la suma del array (pila s0 - 20)
+        uint32_t s0 = proc.read_reg(8); // Leer el registro s0
+        address_t result_addr = s0 - 20; // Dirección de la variable local que almacena el resultado
+        uint32_t stack_result = mem.read<uint32_t>(result_addr); // Leer el resultado de la pila
+        std::cout << "Resultado de add_array(6): " << std::dec << stack_result << std::endl;
+   }
    
-    // Mostrar el resultado de la suma del array (pila s0 - 20)
-   uint32_t s0 = proc.read_reg(8); // Leer el registro s0
-   address_t result_addr = s0 - 20; // Dirección de la variable local que almacena el resultado
-   uint32_t stack_result = mem.read<uint32_t>(result_addr); // Leer el resultado de la pila
-   std::cout << "Resultado de add_array(6): " << std::dec << stack_result << std::endl;
+   
+    return 0;
 }
