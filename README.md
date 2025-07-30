@@ -1,22 +1,10 @@
-# peRISCVcope
+# RiscV-interpeter 
 
-peRISCVcope is a simple rv32i interpreter written in C++ for teaching
-purposes. Currently, it is in alpha status.
+This RISCV interpreter is a simple rv32i interpreter written in C++ for teaching purposes. 
 
-The full code is available upon request. Please e-mail @dariosg for getting
-access to the source code and the lab handouts.
+This project has been developed within the framework of the subject “Garantia y Seguridad” of Computer Engineering in Zaragoza. This project is based on the original peRISCVcope project.[peRISCVcope: A Tiny Teaching-Oriented RISC-V
+Interpreter](https://www.doi.org/10.1109/DCIS55711.2022.9970050).[peRRISCVcope Github page](https://github.com/dariosg/periscvcope)
 
-For a description of the architecture and the idea behind this project please
-read the following paper [peRISCVcope: A Tiny Teaching-Oriented RISC-V
-Interpreter](https://www.doi.org/10.1109/DCIS55711.2022.9970050).
-
-If you want to cite this work, please use the following reference:
-D. Suárez Gracia, A. Valero, R. G. Tejero, M. Villarroya and V. Viñals,
-"_peRISCVcope: A Tiny Teaching-Oriented RISC-V Interpreter_," 2022 37th
-Conference on Design of Circuits and Integrated Circuits (DCIS), Pamplona,
-Spain, 2022, pp. 01-06, doi: 10.1109/DCIS55711.2022.9970050.
-
-Feedback is welcome and appreciated.
 
 ## Cross-Compiler
 
