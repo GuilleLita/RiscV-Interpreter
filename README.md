@@ -2,8 +2,8 @@
 
 This RISCV interpreter is a simple rv32i interpreter written in C++ for teaching purposes. 
 
-This project has been developed within the framework of the subject “Garantia y Seguridad” of Computer Engineering in Zaragoza. This project is based on the original peRISCVcope project.[peRISCVcope: A Tiny Teaching-Oriented RISC-V
-Interpreter](https://www.doi.org/10.1109/DCIS55711.2022.9970050).[peRRISCVcope Github page](https://github.com/dariosg/periscvcope)
+This project has been developed within the framework of the subject “Garantia y Seguridad” of Computer Engineering in Zaragoza. This project is based on the original peRISCVcope project: [peRISCVcope: A Tiny Teaching-Oriented RISC-V
+Interpreter](https://www.doi.org/10.1109/DCIS55711.2022.9970050) and [peRRISCVcope Github page](https://github.com/dariosg/periscvcope)
 
 
 ## Cross-Compiler
